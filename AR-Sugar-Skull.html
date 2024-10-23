@@ -63,27 +63,53 @@
     </a-scene>
     <button id="myButton">Go to Page</button>
 
-    <script>
+   <script>
       const button = document.getElementById("myButton");
-      const marker = document.getElementById("hiroMarker");
-      const video = document.getElementById("skullVideo");
-      
-      video.pause();
-      
+
       button.onclick = function () {
         window.location.href = "https://jlcorrea-creator.github.io/Briefcase/home";
       };
 
-      marker.addEventListener('markerFound', () => {
-        video.play(); // Play the video when the marker is found
-        video.muted = false; // Unmute the video
-      });
+      // Function to handle video play/pause based on marker detection
+      const handleMarker = (markerId) => {
+        const video = document.getElementById(markerId);
+        
+        marker.addEventListener('markerFound', () => {
+          console.log(`${markerId} found!`);
+          video.play();
+          video.muted = false; // Unmute when marker is found
 
-      marker.addEventListener('markerLost', () => {
-        video.pause();
-        video.currentTime = 0; // Reset video when marker is lost
-        video.muted = true; // Mute the video again when marker is lost
-      });
+          // Dynamic scaling based on marker
+          const scaleFactor = 1; // Adjust this value based on tests
+          video.setAttribute('scale', `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
+        });
+
+        marker.addEventListener('markerLost', () => {
+          console.log(`${markerId} lost!`);
+          video.pause();
+          video.currentTime = 0; // Reset video when marker is lost
+          video.muted = true; // Mute the video again when marker is lost
+        });
+      };
+
+       // Function to set the camera FOV based on device width
+       function setCameraFOV() {
+        const camera = document.getElementById('camera');
+        const width = window.innerWidth;
+
+        if (width < 600) {
+          camera.setAttribute('camera', 'fov: 90'); // Mobile devices
+        } else if (width < 1200) {
+          camera.setAttribute('camera', 'fov: 80'); // Tablets
+        } else {
+          camera.setAttribute('camera', 'fov: 70'); // Desktops
+        }
+      }
+
+      // Call the function on load and when resizing
+      window.addEventListener('load', setCameraFOV);
+      window.addEventListener('resize', setCameraFOV);
+
     </script>
 </body>
 </html>
