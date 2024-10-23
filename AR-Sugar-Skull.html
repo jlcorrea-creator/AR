@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SugarSkull</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        #myButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #000080, #ff00ff);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 999;
+            transition: background 0.3s ease;
+        }
+        #myButton:hover {
+            background: linear-gradient(45deg, #ff00ff, #000080); /* Reverse colors on hover */
+        }
+    </style>
+</head>
+<body>
+    <a-scene
+      embedded
+      arjs="sourceType: webcam; debugUIEnabled: false; patternRatio: 0.90"
+      vr-mode-ui="enabled: false"       
+    >
+      <a-marker id="hiroMarker" type="pattern" url="pattern-SSkull1.marker.patt">
+        <a-video id="skullVideo" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.1.mp4"></a-video>
+      </a-marker>
+
+      <a-marker id="hiroMarker" type="pattern" url="pattern-SSkull2.marker.patt">
+        <a-video id="skullVideo" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.2.mp4"></a-video>
+      </a-marker>
+
+      <a-marker id="hiroMarker" type="pattern" url="pattern-SSkull3.marker.patt">
+        <a-video id="skullVideo" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.3.mp4"></a-video>
+      </a-marker>
+      
+      <a-marker id="hiroMarker" type="pattern" url="pattern-SSkull4.marker.patt">
+        <a-video id="skullVideo" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.4.mp4"></a-video>
+      </a-marker>
+
+      <a-marker id="hiroMarker" type="pattern" url="pattern-SSkull5.marker.patt">
+        <a-video id="skullVideo" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.5.mp4"></a-video>
+      </a-marker>
+
+      <a-marker id="hiroMarker" type="pattern" url="pattern-SSkull6.marker.patt">
+        <a-video id="skullVideo" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.6.mp4"></a-video>
+      </a-marker>
+
+      <a-entity camera cursor="fuse: false; rayOrigin: mouse;"></a-entity>
+    </a-scene>
+    <button id="myButton">Go to Page</button>
+
+    <script>
+      const button = document.getElementById("myButton");
+      const marker = document.getElementById("hiroMarker");
+      const video = document.getElementById("skullVideo");
+      
+      video.pause();
+      
+      button.onclick = function () {
+        window.location.href = "https://jlcorrea-creator.github.io/Briefcase/home";
+      };
+
+      marker.addEventListener('markerFound', () => {
+        video.play(); // Play the video when the marker is found
+        video.muted = false; // Unmute the video
+      });
+
+      marker.addEventListener('markerLost', () => {
+        video.pause();
+        video.currentTime = 0; // Reset video when marker is lost
+        video.muted = true; // Mute the video again when marker is lost
+      });
+    </script>
+</body>
+</html>
+
+
