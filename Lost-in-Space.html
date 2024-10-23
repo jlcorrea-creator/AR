@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AR-Blackbox</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        #myButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 999;
+            transition: background 0.3s ease;
+        }
+        #myButton:hover {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+        }
+    </style>
+</head>
+<body>
+    <a-scene
+        embedded
+        arjs="sourceType: webcam; debugUIEnabled: false; patternRatio: 0.90"
+        vr-mode-ui="enabled: false"
+    >
+        <a-marker
+            id="hiroMarker"
+            type="pattern"
+            url="https://cdn.glitch.global/bb734e56-3612-4220-a883-9cbb21cf04d7/pattern-Lost-in-space_marker.patt?v=1729056531210"
+        >
+            <a-video
+                position="0 0 0"
+                rotation="-90 0 0"
+                width="3"
+                height="3"
+                src="https://cdn.glitch.me/bb734e56-3612-4220-a883-9cbb21cf04d7/Lost%20in%20Space.mp4?v=1729063594088" muted
+            ></a-video>
+            <a-box
+                id="glowingBox"
+                position="0 1.5 0"
+                depth=".5"
+                height=".5"
+                width=".5"
+                color="black"
+            ></a-box>
+        </a-marker>
+        <a-entity camera cursor="fuse: false; rayOrigin: mouse;"></a-entity>
+    </a-scene>
+    <button id="myButton">Go to Page</button>
+
+    <script>
+        const button = document.getElementById("myButton");
+        const box = document.getElementById("glowingBox");
+        const marker = document.getElementById("hiroMarker");
+
+        button.onclick = function () {
+            window.location.href = "https://jlcorrea-creator.github.io/Briefcase/home";
+        };
+
+        const colors = [
+            { r: 0, g: 0, b: 155 },
+            { r: 100, g: 0, b: 255 },
+            { r: 100, g: 255, b: 255 },
+        ];
+        const duration = 30;
+        const intervalTime = 2000;
+        const loops = 10;
+        let totalTime = 0;
+        let currentColorIndex = 0;
+        let colorChangeCount = 0;
+        let interval;
+
+        function interpolateColor(color1, color2, factor) {
+            const result = {
+                r: Math.round(color1.r + (color2.r - color1.r) * factor),
+                g: Math.round(color1.g + (color2.g - color1.g) * factor),
+                b: Math.round(color1.b + (color2.b - color1.b) * factor),
+            };
+            return `rgb(${result.r}, ${result.g}, ${result.b})`;
+        }
+
+        function startColorChange() {
+            totalTime = 0;
+            currentColorIndex = 0;
+            colorChangeCount = 0;
+
+            box.setAttribute("animation", {
+                property: "rotation",
+                to: "360 0 360",
+                loop: true,
+                dur: (duration * 4000) / loops,
+                easing: "linear",
+            });
+
+            setTimeout(() => {
+                interval = setInterval(() => {
+                    const factor = (totalTime % (intervalTime * colors.length)) / (intervalTime * colors.length);
+                    const nextColorIndex = (currentColorIndex + 1) % colors.length;
+                    const color = interpolateColor(colors[currentColorIndex], colors[nextColorIndex], factor);
+                    box.setAttribute("color", color);
+
+                    if (factor >= 1) {
+                        currentColorIndex = nextColorIndex;
+                        colorChangeCount++;
+                    }
+
+                    totalTime += intervalTime;
+
+                    if (colorChangeCount >= loops * colors.length) {
+                        clearInterval(interval);
+                        box.setAttribute("color", "black");
+                        box.setAttribute("rotation", "0 0 0");
+                    }
+                }, intervalTime);
+            }, 5000);
+        }
+
+        function resetColorChange() {
+            clearInterval(interval);
+            box.setAttribute("color", "black");
+            box.removeAttribute("animation");
+        }
+
+        marker.addEventListener("markerFound", startColorChange);
+        marker.addEventListener("markerLost", resetColorChange);
+        box.addEventListener("click", () => {
+            resetColorChange();
+            startColorChange();
+        });
+    </script>
+</body>
+</html>
+
