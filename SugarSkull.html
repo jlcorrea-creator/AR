@@ -73,7 +73,7 @@
       // Function to handle video play/pause based on marker detection
       const handleMarker = (markerId) => {
         const video = document.getElementById(markerId);
-        
+        const marker = document.getElementById(markerId);
         marker.addEventListener('markerFound', () => {
           console.log(`${markerId} found!`);
           video.play();
@@ -109,6 +109,14 @@
       // Call the function on load and when resizing
       window.addEventListener('load', setCameraFOV);
       window.addEventListener('resize', setCameraFOV);
+       
+        // Initialize marker handlers
+        handleMarker('skullVideo1');
+        handleMarker('skullVideo2');
+        handleMarker('skullVideo3');
+        handleMarker('skullVideo4');
+        handleMarker('skullVideo5');
+        handleMarker('skullVideo6');
 
     </script>
 </body>
