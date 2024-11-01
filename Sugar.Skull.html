@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SugarSkull</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            height: 100vh; /* Ensure full height */
+        }
+        #myButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #0150fa, #6200ff);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 999;
+            transition: background 0.3s ease;
+        }
+        #myButton:hover {
+            background: linear-gradient(45deg, #6d02fa, #0044ff);
+        }
+    </style>
+</head>
+<body>
+    <a-scene
+        embedded
+        arjs="sourceType: webcam; debugUIEnabled: false; patternRatio: 0.90"
+        vr-mode-ui="enabled: false"
+    >
+        <a-entity id="camera" camera="fov: 80" position="0 0 0" cursor="fuse: false; rayOrigin: mouse"></a-entity>
+        
+        <!-- Marker Definitions -->
+        <a-marker id="hiroMarker1" type="pattern" url="pattern-SSkull1.patt">
+            <a-video id="skullVideo1" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.1.mp4" preload="auto" muted></a-video>
+        </a-marker>
+        <a-marker id="hiroMarker2" type="pattern" url="pattern-SSkull2.patt">
+            <a-video id="skullVideo2" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.2.mp4" preload="auto" muted></a-video>
+        </a-marker>
+        <a-marker id="hiroMarker3" type="pattern" url="pattern-SSkull3.patt">
+            <a-video id="skullVideo3" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.3.mp4" preload="auto" muted></a-video>
+        </a-marker>
+        <a-marker id="hiroMarker4" type="pattern" url="pattern-SSkull4.patt">
+            <a-video id="skullVideo4" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.4.mp4" preload="auto" muted></a-video>
+        </a-marker>
+        <a-marker id="hiroMarker5" type="pattern" url="pattern-SSkull5.patt">
+            <a-video id="skullVideo5" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.5.mp4" preload="auto" muted></a-video>
+        </a-marker>
+        <a-marker id="hiroMarker6" type="pattern" url="pattern-SSkull6.patt">
+            <a-video id="skullVideo6" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.6.mp4" preload="auto" muted></a-video>
+        </a-marker>
+    </a-scene>
+    
+    <button id="myButton" aria-label="Go to about page">Go to Page</button>
+    
+    <script>
+        const button = document.getElementById("myButton");
+        button.onclick = function () {
+            window.location.href = "https://jlcorrea-creator.github.io/Briefcase/about";
+        };
+
+        // Function to handle video play/pause based on marker detection
+        const handleMarker = (markerId) => {
+            const video = document.getElementById(markerId);
+            const marker = document.getElementById(`hiro${markerId.charAt(0).toUpperCase() + markerId.slice(1)}`);
+            marker.addEventListener('markerFound', () => {
+                console.log(`${markerId} found!`);
+                video.play();
+                video.muted = false; // Unmute when marker is found
+            });
+            marker.addEventListener('markerLost', () => {
+                console.log(`${markerId} lost!`);
+                video.pause();
+                video.currentTime = 0; // Reset video when marker is lost
+                video.muted = true; // Mute the video again when marker is lost
+            });
+        };
+
+        // Function to set the camera FOV based on device width
+        function setCameraFOV() {
+            const camera = document.getElementById('camera');
+            const width = window.innerWidth;
+            if (width < 600) {
+                camera.setAttribute('camera', 'fov: 90'); // Mobile devices
+            } else if (width < 1200) {
+                camera.setAttribute('camera', 'fov: 80'); // Tablets
+            } else {
+                camera.setAttribute('camera', 'fov: 70'); // Desktops
+            }
+        }
+
+        // Call the function on load and when resizing
+        window.addEventListener('load', setCameraFOV);
+        window.addEventListener('resize', setCameraFOV);
+
+        // Initialize marker handlers
+        const markerIds = ['skullVideo1', 'skullVideo2', 'skullVideo3', 'skullVideo4', 'skullVideo5', 'skullVideo6'];
+        markerIds.forEach(id => handleMarker(id));
+    </script>
+</body>
+</html>
