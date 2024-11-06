@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>SugarSkull</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
@@ -11,13 +12,14 @@
             margin: 0;
             overflow: hidden;
             height: 100vh; /* Ensure full height */
+            font-family: Arial, sans-serif;
         }
         #myButton {
             position: absolute;
             top: 20px;
             left: 20px;
             padding: 10px 20px;
-            background: linear-gradient(45deg, #0150fa, #6200ff);
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
             color: white;
             border: none;
             border-radius: 5px;
@@ -26,8 +28,34 @@
             transition: background 0.3s ease;
         }
         #myButton:hover {
-            background: linear-gradient(45deg, #6d02fa, #0044ff);
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
         }
+        /* Styles for larger screens (desktop) */
+      @media (min-width: 769px) {
+        a-video {
+          width: 500px;
+          height: 500px;
+        }
+      }
+
+      /* Mobile styles (screens smaller than 768px) */
+      @media screen and (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        #myButton {
+          font-size: 14px;
+          padding: 8px 16px;
+          top: 10px;
+          left: 10px;
+        }
+
+        a-video {
+          width: 100%;
+          height: auto;
+        }
+      }
     </style>
 </head>
 <body>
@@ -57,9 +85,14 @@
         <a-marker id="hiroMarker6" type="pattern" url="pattern-SSkull6.patt">
             <a-video id="skullVideo6" position="0 0 0" rotation="-90 0 0" width="1" height="1" src="SugarSkull.6.mp4" preload="auto" muted></a-video>
         </a-marker>
+        <a-entity
+        camera
+        position="0 0 3"
+        cursor="fuse: false; rayOrigin: mouse; "
+      ></a-entity>
     </a-scene>
     
-    <button id="myButton" aria-label="Go to about page">Go to Page</button>
+    <button id="myButton">Go to Page</button>
     
     <script>
         const button = document.getElementById("myButton");
